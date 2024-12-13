@@ -7,16 +7,12 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 
-# Copy the AuthServer.csproj file into the container
-COPY ./AuthServer/AuthServer.csproj ./AuthServer/  # Adjust this path
-
-# Restore dependencies
-RUN dotnet restore "AuthServer/AuthServer.csproj"
+# Copy the project file and restore dependencies
+COPY AuthServer.csproj .
+RUN dotnet restore
 
 # Copy the rest of the application code
 COPY . .
-
-WORKDIR /src/AuthServer
 
 # Build and publish the application
 RUN dotnet publish "AuthServer.csproj" -c Release -o /app/publish
@@ -24,5 +20,5 @@ RUN dotnet publish "AuthServer.csproj" -c Release -o /app/publish
 # Set up the runtime environment
 FROM base AS final
 WORKDIR /app
-COPY --from=build /app/publish . 
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "AuthServer.dll"]
