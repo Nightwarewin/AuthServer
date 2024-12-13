@@ -13,7 +13,7 @@ class AuthServer
 
     static async Task Main(string[] args)
     {
-        const int port = 5000; // Example port
+        const int port = 80; // Example port
         TcpListener listener = new TcpListener(IPAddress.Any, port);
         listener.Start();
         Console.WriteLine($"Server started on port {port}");
